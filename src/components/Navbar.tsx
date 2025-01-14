@@ -10,8 +10,11 @@ const Navbar = () => {
     <div className="h-20 p-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative">
       {/* MOBILE MENU */}
       <div className="h-full flex items-center justify-between md:hidden">
-        <Link href="/">
-          <h1 className="text-2xl tracking-wide font-bold">FabricFusion</h1>
+        <Link href="/" className="flex items-center gap-3">
+          <Image src="/logo.png" alt="logo" width={40} height={40} />
+          <div className="text-2xl tracking-wide font-extrabold">
+            Fabric<span className="text-red-500">Fusion</span>
+          </div>
         </Link>
         <Menu />
       </div>

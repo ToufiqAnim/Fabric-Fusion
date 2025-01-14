@@ -9,6 +9,16 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const slides = [
   {
     id: 1,
+    title: "Spring Refresh",
+    description: "Revitalize your wardrobe",
+    accentColor: "from-green-500 to-teal-500",
+    discount: "30% OFF",
+    buttonText: "View Latest",
+    url: "/",
+    img: "https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=800",
+  },
+  {
+    id: 2,
     title: "Summer Collection 2025",
     description: "Discover the hottest trends",
     accentColor: "from-orange-500 to-pink-500",
@@ -18,7 +28,7 @@ const slides = [
     img: "https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
   {
-    id: 2,
+    id: 3,
     title: "Winter Essentials",
     description: "Stay warm in style",
     accentColor: "from-blue-500 to-purple-500",
@@ -27,19 +37,9 @@ const slides = [
     url: "/",
     img: "https://images.pexels.com/photos/1021693/pexels-photo-1021693.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
-  {
-    id: 3,
-    title: "Spring Refresh",
-    description: "Revitalize your wardrobe",
-    accentColor: "from-green-500 to-teal-500",
-    discount: "30% OFF",
-    buttonText: "View Latest",
-    url: "/",
-    img: "https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg?auto=compress&cs=tinysrgb&w=800",
-  },
 ];
 
-const Slider = () => {
+const Banner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -171,4 +171,4 @@ const Slider = () => {
   );
 };
 
-export default Slider;
+export default Banner;
