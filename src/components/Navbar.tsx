@@ -3,6 +3,7 @@ import React from "react";
 import Menu from "./Menu";
 import Image from "next/image";
 import SearchBar from "./SearchBar";
+import NavIcons from "./NavICons";
 
 const Navbar = () => {
   return (
@@ -10,7 +11,7 @@ const Navbar = () => {
       {/* MOBILE MENU */}
       <div className="h-full flex items-center justify-between md:hidden">
         <Link href="/">
-          <h1 className="text-2xl tracking-wide">FabricFusion</h1>
+          <h1 className="text-2xl tracking-wide font-bold">FabricFusion</h1>
         </Link>
         <Menu />
       </div>
@@ -19,7 +20,9 @@ const Navbar = () => {
         <div className="w-1/3 xl:w-1/2 flex items-center justify-between gap-8">
           <Link href="/" className="flex items-center gap-3">
             <Image src="/logo.png" alt="logo" width={40} height={40} />
-            <div className="text-2xl tracking-wide">FabricFusion</div>
+            <div className="text-2xl tracking-wide font-extrabold">
+              Fabric<span className="text-red-500">Fusion</span>
+            </div>
           </Link>
           <div className="hidden xl:flex gap-4">
             <Link href="/">Homepage</Link>
@@ -31,6 +34,7 @@ const Navbar = () => {
         </div>
         <div className="w-2/3 xl:w-1/2 flex items-center justify-between gap-8">
           <SearchBar />
+          <NavIcons />
         </div>
       </div>
     </div>
