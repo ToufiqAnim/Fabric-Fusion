@@ -10,22 +10,25 @@ const NavIcons = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const isLoggedIn = false;
   const router = useRouter();
+
   const handleProfile = () => {
     if (!isLoggedIn) {
       router.push("/login");
-      setIsProfileOpen((prev) => !prev);
     } else {
       setIsProfileOpen((prev) => !prev);
     }
   };
+
   return (
     <div className="flex items-center gap-4 xl:gap-7 relative">
+      {/* Profile Icon */}
       <Image
         src="/profile.png"
         alt="profile"
         width={24}
         height={24}
         onClick={handleProfile}
+        className="cursor-pointer"
       />
       {isProfileOpen && (
         <div className="absolute p-4 rounded-md top-12 left-0 bg-white text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20">
@@ -33,18 +36,21 @@ const NavIcons = () => {
           <div className="mt-2 cursor-pointer">Logout</div>
         </div>
       )}
+
+      {/* Notification Icon */}
       <Image
         src="/notification.png"
-        alt=""
+        alt="notifications"
         width={24}
         height={24}
         className="cursor-pointer"
       />
 
+      {/* Cart Icon */}
       <div className="relative cursor-pointer">
         <Image
           src="/cart.png"
-          alt=""
+          alt="cart"
           width={22}
           height={22}
           onClick={() => setIsCartOpen((prev) => !prev)}
@@ -53,7 +59,9 @@ const NavIcons = () => {
           0
         </div>
       </div>
-      {!isCartOpen && <CartModal />}
+
+      {/* Cart Modal */}
+      {isCartOpen && <CartModal />}
     </div>
   );
 };
