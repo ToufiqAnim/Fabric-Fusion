@@ -8,38 +8,37 @@ const Products = () => {
   const products = [
     {
       id: 1,
-      name: "Zara T-shirt",
-      price: "$43",
+      name: "D&G Cotton Slim-Fit Trousers",
+      price: "$895",
       mainImage: "/pant.jpg",
       hoverImage: "/pant2.jpg",
       link: "/test",
     },
     {
       id: 2,
-      name: "Zara T-shirt",
-      price: "$43",
+      name: "D&G DNA Leather Bomber Jacket",
+      price: "$2,795",
       mainImage: "/jacket2.jpg",
       hoverImage: "/jacket.jpg",
       link: "/test",
     },
     {
       id: 3,
-      name: "Zara T-shirt",
-      price: "$43",
+      name: "D&G Silk Twill Shirt",
+      price: "$1,195",
       mainImage: "/silk.jpg",
       hoverImage: "/silk2.jpg",
       link: "/test",
     },
     {
       id: 4,
-      name: "Zara T-shirt",
-      price: "$43",
+      name: "D&G Logo Cotton T-Shirt",
+      price: "$495",
       mainImage: "/tshirt1.jpg",
       hoverImage: "/tshirt3.jpg",
       link: "/test",
     },
   ];
-
   return (
     <div className="mt-12 flex gap-x-8 gap-y-16 justify-between flex-wrap">
       {products.map((product) => (
@@ -78,7 +77,9 @@ const Products = () => {
 
           {/* Product information section */}
           <div className="flex justify-between">
-            <span className="font-medium">{product.name}</span>
+            <span className="font-medium text-sm text-gray-600">
+              {product.name}
+            </span>
             <span className="font-semibold">{product.price}</span>
           </div>
 

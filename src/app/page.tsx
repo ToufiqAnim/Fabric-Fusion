@@ -1,8 +1,21 @@
+"use client";
 import Banner from "@/components/Banner";
 import Categories from "@/components/Categories";
 import Products from "@/components/Products";
+import { WixClientContext } from "@/context/WixContext";
+import { useWixClient } from "@/hooks/useWixClient";
+import { useContext, useEffect } from "react";
 
 const HomePage = () => {
+  const WixClient = useWixClient();
+  useEffect(() => {
+    const fetchedProducts = async () => {
+      const res = await WixClient.products.queryProducts().find();
+      console.log(res);
+    };
+    fetchedProducts();
+  }, [WixClient]);
+
   return (
     <div className="min-h-screen">
       {/* Hero Banner Section */}
