@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 
-const Add = ({ stockNumber }: { stockNumber: number }) => {
+const Add = ({
+  productId,
+  variantId,
+  stockNumber,
+}: {
+  productId: string;
+  variantId: string;
+  stockNumber: number;
+}) => {
   const [quantity, setQuantity] = useState(1);
 
   const handleQuantity = (type: "i" | "d") => {

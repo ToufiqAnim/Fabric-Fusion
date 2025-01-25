@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 
 const CartModal = () => {
-  const hasCartItems = false;
+  const hasCartItems = true;
   const [isOpen, setIsOpen] = useState(false);
 
   return (

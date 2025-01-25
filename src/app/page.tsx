@@ -1,20 +1,20 @@
-"use client";
 import Banner from "@/components/Banner";
 import Categories from "@/components/Categories";
 import Products from "@/components/Products";
 import { WixClientContext } from "@/context/WixContext";
 import { useWixClient } from "@/hooks/useWixClient";
-import { useContext, useEffect } from "react";
+import { WixClientServer } from "@/lib/WixClientServer";
+import { Suspense, useContext, useEffect } from "react";
 
-const HomePage = () => {
-  const WixClient = useWixClient();
+const HomePage = async () => {
+  /*   const WixClient = useWixClient();
   useEffect(() => {
     const fetchedProducts = async () => {
       const res = await WixClient.products.queryProducts().find();
       console.log(res);
     };
     fetchedProducts();
-  }, [WixClient]);
+  }, [WixClient]); */
 
   return (
     <div className="min-h-screen">
@@ -32,7 +32,9 @@ const HomePage = () => {
             timeless classics
           </p>
         </div>
-        <Products />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Products categoryId={process.env.FEATURED_PRODUCTS_ID!} limit={4} />
+        </Suspense>
       </section>
 
       {/* Categories Showcase Section */}
@@ -46,7 +48,9 @@ const HomePage = () => {
             timeless classics
           </p>
         </div>
-        <Categories />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Categories />
+        </Suspense>
       </section>
 
       {/* Trending Products Section */}
@@ -60,7 +64,7 @@ const HomePage = () => {
             define the latest fashion
           </p>
         </div>
-        <Products />
+        {/* <Products /> */}
       </section>
     </div>
   );

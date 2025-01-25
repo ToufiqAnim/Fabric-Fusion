@@ -1,78 +1,58 @@
+import { WixClientServer } from "@/lib/WixClientServer";
+import { products } from "@wix/stores";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const Products = () => {
-  // We organize our product data in an array for better maintainability and scalability.
-  // This makes it easier to add, remove, or modify products in the future.
-  const products = [
-    {
-      id: 1,
-      name: "D&G Cotton Slim-Fit Trousers",
-      price: "$895",
-      mainImage: "/pant.jpg",
-      hoverImage: "/pant2.jpg",
-      link: "/test",
-    },
-    {
-      id: 2,
-      name: "D&G DNA Leather Bomber Jacket",
-      price: "$2,795",
-      mainImage: "/jacket2.jpg",
-      hoverImage: "/jacket.jpg",
-      link: "/test",
-    },
-    {
-      id: 3,
-      name: "D&G Silk Twill Shirt",
-      price: "$1,195",
-      mainImage: "/silk.jpg",
-      hoverImage: "/silk2.jpg",
-      link: "/test",
-    },
-    {
-      id: 4,
-      name: "D&G Logo Cotton T-Shirt",
-      price: "$495",
-      mainImage: "/tshirt1.jpg",
-      hoverImage: "/tshirt3.jpg",
-      link: "/test",
-    },
-  ];
+const PRODUCT_PER_PAGE = 8;
+const Products = async ({
+  categoryId,
+  limit,
+  searchParmas,
+}: {
+  categoryId: string;
+  limit?: number;
+  searchParmas?: any;
+}) => {
+  const WixClient = await WixClientServer();
+
+  const res = await WixClient.products
+    .queryProducts()
+    .eq("collectionIds", categoryId)
+    .limit(limit || PRODUCT_PER_PAGE)
+    .find();
+
   return (
     <div className="mt-12 flex gap-x-8 gap-y-16 justify-between flex-wrap">
-      {products.map((product) => (
-        // Using Next.js Link component for client-side navigation
+      {res.items.map((product: products.Product) => (
         <Link
-          key={product.id}
-          href={product.link}
+          key={product._id}
+          href={"/" + product.slug}
           className="w-full flex flex-col gap-4 sm:w-[45%] lg:w-[22%]"
         >
-          {/* Product image container with relative positioning for absolute children */}
           <div className="relative w-full h-96">
-            {/* Featured tag positioned at the top of the image */}
             <div className="absolute top-4 left-0 bg-white px-3 py-1 text-xs z-20">
               FEATURED
             </div>
 
             {/* Main product image that fades out on hover */}
             <Image
-              src={product.mainImage}
-              alt={product.name}
+              src={product.media?.mainMedia?.image?.url || "/product.png"}
+              alt=""
               fill
               sizes="25vw"
               className="absolute object-cover rounded-md z-10 hover:opacity-0 transition-opacity duration-500"
-              priority={product.id === 1} // Load first image immediately
             />
 
-            {/* Secondary image that appears when main image fades */}
-            <Image
-              src={product.hoverImage}
-              alt={`${product.name} alternate view`}
-              fill
-              sizes="25vw"
-              className="object-cover rounded-md"
-            />
+            {product.media?.items && (
+              <Image
+                src={product.media?.items[1]?.image?.url || "/product.png"}
+                alt=""
+                fill
+                sizes="25vw"
+                className="absolute object-cover rounded-md"
+              />
+            )}
           </div>
 
           {/* Product information section */}
@@ -80,7 +60,7 @@ const Products = () => {
             <span className="font-medium text-sm text-gray-600">
               {product.name}
             </span>
-            <span className="font-semibold">{product.price}</span>
+            <span className="font-semibold">${product.price?.price}</span>
           </div>
 
           {/* Add to Cart button with hover effects */}

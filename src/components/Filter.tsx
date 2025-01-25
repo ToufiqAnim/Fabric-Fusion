@@ -26,8 +26,15 @@ const Filter = () => {
           onChange={handleFilterChange}
         >
           <option>Type</option>
-          <option value="physical">Physical</option>
-          <option value="digital">Digital</option>
+          <option value="suits">Suits and Blazers</option>
+          <option value="tshirts">T Shirts And Polos</option>
+          <option value="shirts">Shirts</option>
+          <option value="sweatshirts">SweatShirts</option>
+          <option value="denim">Denim</option>
+          <option value="pants">Pant and Shorts</option>
+          <option value="dreses">Dresses</option>
+          <option value="skirts">Skirts</option>
+          <option value="coats">Coats and Jakets</option>
         </select>
 
         {/* Price Range Inputs */}
@@ -55,15 +62,18 @@ const Filter = () => {
           <option>Category</option>
           <option value="newArrival">New Arrival</option>
           <option value="popular">Popular</option>
+          <option value="popular">Men</option>
+          <option value="popular">Women</option>
+          <option value="popular">Children</option>
         </select>
 
         {/* All Filters Dropdown */}
-        <select
+        {/*      <select
           name="allFilters"
           className="py-3 px-4 rounded-xl text-sm font-medium bg-gray-100 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
         >
           <option>All Filters</option>
-        </select>
+        </select> */}
       </div>
 
       {/* Sort Dropdown */}
