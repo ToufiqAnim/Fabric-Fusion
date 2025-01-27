@@ -104,7 +104,7 @@ const CustomizeProducts = ({
                     disabled
                       ? "ring-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed"
                       : selected
-                      ? "ring-red-500 text-white bg-red-500 hover:bg-red-600"
+                      ? "ring-red-500 text-white bg-red-500  hover:bg-red-600"
                       : "ring-gray-300 text-red-500 bg-white hover:bg-gray-100"
                   }`}
                   key={choice.description}

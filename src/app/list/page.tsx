@@ -8,8 +8,9 @@ const ListPage = async ({ searchParams }: { searchParams: any }) => {
   const wixClient = await WixClientServer();
 
   const cat = await wixClient.collections.getCollectionBySlug(
-    searchParams.cat || "all-products"
+    searchParams?.cat || "all-products"
   );
+  console.log(cat);
   return (
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 ">
       <div className="hidden bg-pink-50 px-4 sm:flex justify-between h-64">
@@ -18,7 +19,7 @@ const ListPage = async ({ searchParams }: { searchParams: any }) => {
             Grab up to 50% off on
             <br /> Selected Products
           </h1>
-          <button className="rounded-md bg-red-500 text-white px-5 py-3 text-sm w-max">
+          <button className="rounded-md bg-red-500  text-white px-5 py-3 text-sm w-max">
             Buy Now
           </button>
         </div>
@@ -27,7 +28,9 @@ const ListPage = async ({ searchParams }: { searchParams: any }) => {
         </div>
       </div>
       <Filter />
-      <h1 className="mt-10 text-xl font-semibold">Suits for You!!</h1>
+      <h1 className="mt-10 text-xl font-semibold">
+        {cat.collection?.name} for You!!
+      </h1>
       <Suspense fallback={<div>Loading...</div>}>
         <Products
           categoryId={

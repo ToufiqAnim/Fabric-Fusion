@@ -126,7 +126,7 @@ const Login = () => {
           <div className="space-y-4">
             <button
               type="submit"
-              className="w-full bg-red-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+              className="w-full bg-red-500  text-white py-3 px-4 rounded-lg font-medium hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
             >
               Sign in
             </button>

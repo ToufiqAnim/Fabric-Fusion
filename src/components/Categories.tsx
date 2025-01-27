@@ -6,9 +6,9 @@ import React from "react";
 const Categories = async () => {
   const wixClient = await WixClientServer();
   const categories = await wixClient.collections.queryCollections().find();
-  console.log(categories);
+
   return (
-    <section className="py-16 px-4 md:px-8 lg:px-16 max-w-[1920px] mx-auto">
+    <section className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
       <div className="relative">
         {/* Custom scroll fade effect */}
         <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l z-10 pointer-events-none" />
