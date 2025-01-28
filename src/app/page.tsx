@@ -60,7 +60,7 @@ const HomePage = async () => {
             Trending Now
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover what's popular this season handpicked selections that
+            Discover what&apos;s popular this season handpicked selections that
             define the latest fashion
           </p>
         </div>

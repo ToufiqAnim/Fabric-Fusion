@@ -1,7 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { Lock, Mail, Eye, EyeOff, User } from "lucide-react";
-
+import { useWixClient } from "@/hooks/useWixClient";
+import { LoginState } from "@wix/sdk";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 enum MODE {
   LOGIN = "LOGIN",
   REGISTER = "REGISTER",
@@ -10,6 +13,14 @@ enum MODE {
 }
 
 const LoginPage = () => {
+  const wixClient = useWixClient();
+  const router = useRouter();
+
+  const isLogedIn = wixClient.auth.loggedIn();
+  if (isLogedIn) {
+    router.push("/");
+  }
+
   const [mode, setMode] = useState(MODE.LOGIN);
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
@@ -46,23 +57,83 @@ const LoginPage = () => {
       : mode === MODE.RESET_PASSWORD
       ? "Reset Password"
       : "Verify";
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    // Simulated delay to show loading state
-    setTimeout(() => {
+    try {
+      let response;
+
+      switch (mode) {
+        case MODE.LOGIN:
+          response = await wixClient.auth.login({
+            email,
+            password,
+          });
+          break;
+        case MODE.REGISTER:
+          response = await wixClient.auth.register({
+            email,
+            password,
+            profile: { nickname: username },
+          });
+          break;
+        case MODE.RESET_PASSWORD:
+          response = await wixClient.auth.sendPasswordResetEmail(
+            email,
+            window.location.href
+          );
+          setMessage("Password reset email sent. Please check your e-mail.");
+          break;
+        case MODE.EMAIL_VERIFICATION:
+          response = await wixClient.auth.processVerification({
+            verificationCode: emailCode,
+          });
+          break;
+        default:
+          break;
+      }
+      console.log(response);
+      switch (response?.loginState) {
+        case LoginState.SUCCESS:
+          setMessage("Successful! You are being redirected.");
+          const tokens = await wixClient.auth.getMemberTokensForDirectLogin(
+            response.data.sessionToken!
+          );
+
+          Cookies.set("refreshToken", JSON.stringify(tokens.refreshToken), {
+            expires: 2,
+          });
+          wixClient.auth.setTokens(tokens);
+          router.push("/");
+          break;
+        case LoginState.FAILURE:
+          if (
+            response.errorCode === "invalidEmail" ||
+            response.errorCode === "invalidPassword"
+          ) {
+            setError("Invalid email or password!");
+          } else if (response.errorCode === "emailAlreadyExists") {
+            setError("Email already exists!");
+          } else if (response.errorCode === "resetPassword") {
+            setError("You need to reset your password!");
+          } else {
+            setError("Something went wrong!");
+          }
+        case LoginState.EMAIL_VERIFICATION_REQUIRED:
+          setMode(MODE.EMAIL_VERIFICATION);
+        case LoginState.OWNER_APPROVAL_REQUIRED:
+          setMessage("Your account is pending approval");
+        default:
+          break;
+      }
+    } catch (err) {
+      console.log(err);
+      setError("Something went wrong!");
+    } finally {
       setIsLoading(false);
-      console.log("Form submitted:", {
-        mode,
-        email,
-        password,
-        username,
-        emailCode,
-      });
-    }, 1500);
+    }
   };
 
   return (
@@ -210,7 +281,7 @@ const LoginPage = () => {
           <div className="text-center text-sm text-gray-600">
             {mode === MODE.LOGIN ? (
               <>
-                Don't have an account?{" "}
+                Don&apos;t have an account?
                 <button
                   type="button"
                   onClick={() => setMode(MODE.REGISTER)}

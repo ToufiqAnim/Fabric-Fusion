@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import CartModal from "./CartModal";
+import { WixClientServer } from "@/lib/WixClientServer";
+import { useWixClient } from "@/hooks/useWixClient";
 
 const NavIcons = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -18,6 +20,8 @@ const NavIcons = () => {
       setIsProfileOpen((prev) => !prev);
     }
   };
+  // WIX Auth
+  const wixClient = useWixClient();
 
   return (
     <div className="flex items-center gap-4 xl:gap-7 relative">
