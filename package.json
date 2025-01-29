@@ -9,14 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@wix/ecom": "^1.0.908",
+    "@wix/members": "^1.0.181",
     "@wix/sdk": "^1.15.9",
     "@wix/stores": "^1.0.346",
     "isomorphic-dompurify": "^2.20.0",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.471.1",
     "next": "14.2.2",
+    "punycode2": "^1.0.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-google-recaptcha": "^3.1.0"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",

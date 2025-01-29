@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { WixClientContextProvider } from "@/context/WixContext";
+import Script from "next/script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://www.google.com/recaptcha/api.js"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className={inter.className}>
         <WixClientContextProvider>
           <Navbar />

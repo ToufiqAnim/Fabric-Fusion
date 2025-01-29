@@ -4,15 +4,6 @@ import { products } from "@wix/stores";
 import React, { useEffect, useState, useMemo } from "react";
 import Add from "./Add";
 
-interface Variant {
-  id: string;
-  choices: { [key: string]: string };
-  stock: {
-    inStock: boolean;
-    quantity: number;
-  };
-}
-
 const CustomizeProducts = ({
   productId,
   productOptions,
@@ -20,40 +11,44 @@ const CustomizeProducts = ({
 }: {
   productId: string;
   productOptions: products.ProductOption[];
-  variants: Variant[];
+  variants: products.Variant[];
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: string]: string;
   }>({});
-  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
+  const [selectedVariant, setSelectedVariant] = useState<products.Variant>();
 
-  const isVariantInStock = (choices: { [key: string]: string }): boolean => {
+  useEffect(() => {
+    const variant = variants.find((v) => {
+      const variantChoices = v.choices;
+      if (!variantChoices) return false;
+      return Object.entries(selectedOptions).every(
+        ([key, value]) => variantChoices[key] === value
+      );
+    });
+    setSelectedVariant(variant);
+  }, [selectedOptions, variants]);
+
+  const handleOptionSelect = (optionType: string, choice: string) => {
+    setSelectedOptions((prev) => ({ ...prev, [optionType]: choice }));
+  };
+
+  const isVariantInStock = (choices: { [key: string]: string }) => {
     return variants.some((variant) => {
       const variantChoices = variant.choices;
       if (!variantChoices) return false;
+
       return (
         Object.entries(choices).every(
           ([key, value]) => variantChoices[key] === value
         ) &&
         variant.stock?.inStock &&
+        variant.stock?.quantity &&
         variant.stock?.quantity > 0
       );
     });
   };
 
-  const handleOptionSelect = (optionType: string, choice: string): void => {
-    setSelectedOptions((prev) => ({ ...prev, [optionType]: choice }));
-  };
-
-  useEffect(() => {
-    const variant = variants.find((v) =>
-      Object.entries(selectedOptions).every(
-        ([key, value]) => v.choices[key] === value
-      )
-    );
-    setSelectedVariant(variant || null);
-  }, [selectedOptions, variants]);
-  console.log(selectedVariant?._id);
   return (
     <div className="flex flex-col gap-6">
       {productOptions.map((option) => (
@@ -63,15 +58,15 @@ const CustomizeProducts = ({
             {option.choices?.map((choice) => {
               const disabled = !isVariantInStock({
                 ...selectedOptions,
-                [option.name]: choice.description,
+                [option.name!]: choice.description!,
               });
 
               const selected =
-                selectedOptions[option.name] === choice.description;
+                selectedOptions[option.name!] === choice.description;
 
               const clickHandler = disabled
                 ? undefined
-                : () => handleOptionSelect(option.name, choice.description);
+                : () => handleOptionSelect(option.name!, choice.description!);
 
               return option.name === "Color" ? (
                 <li

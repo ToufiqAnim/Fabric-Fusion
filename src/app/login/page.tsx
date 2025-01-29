@@ -1,10 +1,22 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Lock, Mail, Eye, EyeOff, User } from "lucide-react";
 import { useWixClient } from "@/hooks/useWixClient";
 import { LoginState } from "@wix/sdk";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+
+declare global {
+  interface Window {
+    grecaptcha: {
+      ready: (callback: () => void) => void;
+      execute: (siteKey: string) => Promise<string>;
+      render: (element: string | HTMLElement, options: any) => number;
+      reset: (widgetId?: number) => void;
+    };
+  }
+}
+
 enum MODE {
   LOGIN = "LOGIN",
   REGISTER = "REGISTER",
@@ -29,6 +41,8 @@ const LoginPage = () => {
   const [emailCode, setEmailCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [widgetId, setWidgetId] = useState<number>();
   const [message, setMessage] = useState("");
 
   const formTitle =
@@ -57,10 +71,69 @@ const LoginPage = () => {
       : mode === MODE.RESET_PASSWORD
       ? "Reset Password"
       : "Verify";
+
+  useEffect(() => {
+    const initRecaptcha = () => {
+      if (!window.grecaptcha) return;
+
+      try {
+        window.grecaptcha.ready(() => {
+          const id = window.grecaptcha.render("recaptcha-container", {
+            sitekey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+            callback: (token: string) => {
+              setCaptchaToken(token);
+            },
+            "expired-callback": () => {
+              setCaptchaToken("");
+            },
+          });
+          setWidgetId(id);
+        });
+      } catch (err) {
+        console.error("Error initializing reCAPTCHA:", err);
+        setError("Failed to load verification. Please refresh the page.");
+      }
+    };
+
+    // Check if reCAPTCHA is loaded
+    if (window.grecaptcha) {
+      initRecaptcha();
+    } else {
+      const checkRecaptcha = setInterval(() => {
+        if (window.grecaptcha) {
+          clearInterval(checkRecaptcha);
+          initRecaptcha();
+        }
+      }, 100);
+
+      return () => clearInterval(checkRecaptcha);
+    }
+
+    return () => {
+      if (window.grecaptcha && widgetId) {
+        window.grecaptcha.reset(widgetId);
+      }
+    };
+  }, []);
+
+  // Reset CAPTCHA when mode changes
+  useEffect(() => {
+    if (window.grecaptcha && widgetId) {
+      window.grecaptcha.reset(widgetId);
+      setCaptchaToken("");
+    }
+  }, [mode, widgetId]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
+
+    if (!captchaToken && mode !== MODE.EMAIL_VERIFICATION) {
+      setError("Please complete the CAPTCHA verification.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       let response;
@@ -70,6 +143,9 @@ const LoginPage = () => {
           response = await wixClient.auth.login({
             email,
             password,
+            captchaTokens: {
+              recaptchaToken: captchaToken,
+            },
           });
           break;
         case MODE.REGISTER:
@@ -77,6 +153,9 @@ const LoginPage = () => {
             email,
             password,
             profile: { nickname: username },
+            captchaTokens: {
+              recaptchaToken: captchaToken,
+            },
           });
           break;
         case MODE.RESET_PASSWORD:
@@ -121,8 +200,14 @@ const LoginPage = () => {
           } else {
             setError("Something went wrong!");
           }
+          if (window.grecaptcha && widgetId) {
+            window.grecaptcha.reset(widgetId);
+            setCaptchaToken("");
+          }
+          break;
         case LoginState.EMAIL_VERIFICATION_REQUIRED:
           setMode(MODE.EMAIL_VERIFICATION);
+          break;
         case LoginState.OWNER_APPROVAL_REQUIRED:
           setMessage("Your account is pending approval");
         default:
@@ -131,6 +216,10 @@ const LoginPage = () => {
     } catch (err) {
       console.log(err);
       setError("Something went wrong!");
+      if (window.grecaptcha && widgetId) {
+        window.grecaptcha.reset(widgetId);
+        setCaptchaToken("");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -146,6 +235,12 @@ const LoginPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
+            {mode !== MODE.EMAIL_VERIFICATION && (
+              <div
+                id="recaptcha-container"
+                className="flex justify-center my-4"
+              ></div>
+            )}
             {mode === MODE.REGISTER && (
               <div className="relative">
                 <label

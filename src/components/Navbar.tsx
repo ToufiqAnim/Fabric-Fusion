@@ -11,10 +11,7 @@ const Navbar = () => {
       {/* MOBILE MENU */}
       <div className="h-full flex items-center justify-between md:hidden">
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/logo.png" alt="logo" width={40} height={40} />
-          <div className="text-2xl tracking-wide font-extrabold">
-            Fabric<span className="text-red-500">Fusion</span>
-          </div>
+          <div className="text-3xl tracking-wide font-extrabold">Gucci CA</div>
         </Link>
         <Menu />
       </div>
@@ -22,9 +19,8 @@ const Navbar = () => {
       <div className="hidden md:flex items-center justify-between h-ful gap-8">
         <div className="w-1/3 xl:w-1/2 flex items-center justify-between gap-8">
           <Link href="/" className="flex items-center gap-3">
-            <Image src="/logo.png" alt="logo" width={40} height={40} />
-            <div className="text-2xl tracking-wide font-extrabold">
-              Fabric<span className="text-red-500">Fusion</span>
+            <div className="text-3xl tracking-wide font-extrabold">
+              Gucci CA
             </div>
           </Link>
           <div className="hidden xl:flex gap-4">
