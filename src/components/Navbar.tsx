@@ -4,6 +4,7 @@ import Menu from "./Menu";
 import Image from "next/image";
 import SearchBar from "./SearchBar";
 import NavIcons from "./NavICons";
+import { useWixClient } from "@/hooks/useWixClient";
 
 const Navbar = () => {
   return (

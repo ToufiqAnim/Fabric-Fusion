@@ -28,6 +28,12 @@ const LoginPage = () => {
   const wixClient = useWixClient();
   const router = useRouter();
 
+  // Check if running locally
+  const isLocalhost =
+    typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1");
+
   const isLogedIn = wixClient.auth.loggedIn();
   if (isLogedIn) {
     router.push("/");
@@ -73,6 +79,9 @@ const LoginPage = () => {
       : "Verify";
 
   useEffect(() => {
+    // Skip reCAPTCHA initialization if running locally
+    if (isLocalhost) return;
+
     const initRecaptcha = () => {
       if (!window.grecaptcha) return;
 
@@ -95,7 +104,6 @@ const LoginPage = () => {
       }
     };
 
-    // Check if reCAPTCHA is loaded
     if (window.grecaptcha) {
       initRecaptcha();
     } else {
@@ -114,22 +122,21 @@ const LoginPage = () => {
         window.grecaptcha.reset(widgetId);
       }
     };
-  }, []);
+  }, [isLocalhost]);
 
-  // Reset CAPTCHA when mode changes
   useEffect(() => {
-    if (window.grecaptcha && widgetId) {
+    if (!isLocalhost && window.grecaptcha && widgetId) {
       window.grecaptcha.reset(widgetId);
       setCaptchaToken("");
     }
-  }, [mode, widgetId]);
+  }, [mode, widgetId, isLocalhost]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    if (!captchaToken && mode !== MODE.EMAIL_VERIFICATION) {
+    if (!isLocalhost && !captchaToken && mode !== MODE.EMAIL_VERIFICATION) {
       setError("Please complete the CAPTCHA verification.");
       setIsLoading(false);
       return;
@@ -137,15 +144,16 @@ const LoginPage = () => {
 
     try {
       let response;
+      const captchaTokens = isLocalhost
+        ? undefined
+        : { recaptchaToken: captchaToken };
 
       switch (mode) {
         case MODE.LOGIN:
           response = await wixClient.auth.login({
             email,
             password,
-            captchaTokens: {
-              recaptchaToken: captchaToken,
-            },
+            captchaTokens,
           });
           break;
         case MODE.REGISTER:
@@ -153,9 +161,7 @@ const LoginPage = () => {
             email,
             password,
             profile: { nickname: username },
-            captchaTokens: {
-              recaptchaToken: captchaToken,
-            },
+            captchaTokens,
           });
           break;
         case MODE.RESET_PASSWORD:
@@ -170,17 +176,14 @@ const LoginPage = () => {
             verificationCode: emailCode,
           });
           break;
-        default:
-          break;
       }
-      console.log(response);
+
       switch (response?.loginState) {
         case LoginState.SUCCESS:
           setMessage("Successful! You are being redirected.");
           const tokens = await wixClient.auth.getMemberTokensForDirectLogin(
             response.data.sessionToken!
           );
-
           Cookies.set("refreshToken", JSON.stringify(tokens.refreshToken), {
             expires: 2,
           });
@@ -200,7 +203,7 @@ const LoginPage = () => {
           } else {
             setError("Something went wrong!");
           }
-          if (window.grecaptcha && widgetId) {
+          if (!isLocalhost && window.grecaptcha && widgetId) {
             window.grecaptcha.reset(widgetId);
             setCaptchaToken("");
           }
@@ -210,13 +213,12 @@ const LoginPage = () => {
           break;
         case LoginState.OWNER_APPROVAL_REQUIRED:
           setMessage("Your account is pending approval");
-        default:
           break;
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       setError("Something went wrong!");
-      if (window.grecaptcha && widgetId) {
+      if (!isLocalhost && window.grecaptcha && widgetId) {
         window.grecaptcha.reset(widgetId);
         setCaptchaToken("");
       }
@@ -235,7 +237,7 @@ const LoginPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
-            {mode !== MODE.EMAIL_VERIFICATION && (
+            {!isLocalhost && mode !== MODE.EMAIL_VERIFICATION && (
               <div
                 id="recaptcha-container"
                 className="flex justify-center my-4"
@@ -376,7 +378,7 @@ const LoginPage = () => {
           <div className="text-center text-sm text-gray-600">
             {mode === MODE.LOGIN ? (
               <>
-                Don&apos;t have an account?
+                Don&apos;t have an account?{" "}
                 <button
                   type="button"
                   onClick={() => setMode(MODE.REGISTER)}

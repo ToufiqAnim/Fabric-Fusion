@@ -20,7 +20,8 @@
     "punycode2": "^1.0.1",
     "react": "^18",
     "react-dom": "^18",
-    "react-google-recaptcha": "^3.1.0"
+    "react-google-recaptcha": "^3.1.0",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
