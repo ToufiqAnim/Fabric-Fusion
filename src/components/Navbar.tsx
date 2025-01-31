@@ -1,43 +1,165 @@
+"use client";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import React from "react";
-import Menu from "./Menu";
-import Image from "next/image";
-import SearchBar from "./SearchBar";
+import { Search } from "lucide-react";
+import { usePathname } from "next/navigation";
+import MobileMenu from "./Menu";
 import NavIcons from "./NavICons";
-import { useWixClient } from "@/hooks/useWixClient";
+
+const utilityLinks = [
+  { label: "Fashion", href: "/fashion" },
+  { label: "Beauty", href: "/beauty" },
+  { label: "Casa", href: "/casa" },
+  { label: "Food & Beverage", href: "/food-beverage" },
+  { label: "World", href: "/world" },
+  { label: "Alta Moda", href: "/alta-moda" },
+  { label: "Sustainability", href: "/sustainability" },
+];
+
+const mainNavLinks = [
+  { label: "VALENTINE'S DAY", href: "/valentines-day" },
+  { label: "HIGHLIGHTS", href: "/highlights" },
+  { label: "WOMEN", href: "/women" },
+  { label: "MEN", href: "/list?cat=men" },
+  { label: "CHILDREN", href: "/children" },
+  { label: "BAGS", href: "/bags" },
+];
 
 const Navbar = () => {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    if (!isHomePage) return; // No scroll effect on other pages
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isHomePage]);
+
+  const navbarStyles = isHomePage
+    ? isScrolled || isHovered
+      ? "bg-white shadow-md h-16"
+      : "bg-transparent h-20"
+    : "bg-white shadow-md h-14";
+
+  const textColor =
+    isHomePage && !isScrolled && !isHovered ? "text-white" : "text-black";
+  const linkTextSize = isHomePage ? "text-sm" : "text-xs"; // Smaller font on other pages
+  const brandSize = isHomePage ? "text-7xl" : "text-3xl";
+
   return (
-    <div className="h-20 p-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative">
-      {/* MOBILE MENU */}
-      <div className="h-full flex items-center justify-between md:hidden">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="text-3xl tracking-wide font-extrabold">Gucci CA</div>
-        </Link>
-        <Menu />
-      </div>
-      {/* Desktop Menu */}
-      <div className="hidden md:flex items-center justify-between h-ful gap-8">
-        <div className="w-1/3 xl:w-1/2 flex items-center justify-between gap-8">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="text-3xl tracking-wide font-extrabold">
-              Gucci CA
-            </div>
+    <>
+      <div>
+        {/* Mobile Menu */}
+        <div
+          className={`${
+            isScrolled ? `bg-white ` : "bg-transparent"
+          } bg-transparent fixed top-0 left-0 w-full z-50  flex items-center justify-between md:hidden px-6 py-4 transition-all duration-300`}
+        >
+          <Link
+            href="/"
+            className={`${
+              isScrolled ? "text-black" : "text-white"
+            } text-2xl font-normal tracking-wide`}
+          >
+            DOLCE & GABBANA
           </Link>
-          <div className="hidden xl:flex gap-4">
-            <Link href="/">Homepage</Link>
-            <Link href="/">Shop</Link>
-            <Link href="/">Deals</Link>
-            <Link href="/">About</Link>
-            <Link href="/">Contact</Link>
+          <MobileMenu isScrolled={isScrolled} />
+        </div>
+        {/*    className={`pt-5 ${
+              isHomePage && !isScrolled && !isHovered
+                ? "bg-transparent"
+                : "bg-white shadow-sm"
+            }`} */}
+        {/* Desktop Navbar */}
+        <div
+          className={`${
+            isHomePage
+              ? "fixed top-0 left-0 w-full z-50 transition-all duration-300"
+              : ""
+          } hidden md:block  pt-5 ${
+            isHomePage && !isScrolled && !isHovered
+              ? "bg-transparent"
+              : "bg-white shadow-sm"
+          }`}
+          onMouseEnter={isHomePage ? () => setIsHovered(true) : undefined}
+          onMouseLeave={isHomePage ? () => setIsHovered(false) : undefined}
+        >
+          <div>
+            {/* Utility Links */}
+
+            <div className="container mx-auto px-4 flex justify-between items-center h-10 ">
+              <nav className="flex space-x-6">
+                {utilityLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className={`${linkTextSize} font-medium transition-colors duration-300 ${textColor} hover:text-gray-600`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+
+              <div className="flex items-center space-x-6">
+                <button className="transition-colors duration-300">
+                  <Search
+                    size={18}
+                    className={`transition-colors duration-300 ${textColor}`}
+                  />
+                </button>
+
+                <Link
+                  href="/login"
+                  className={`${linkTextSize} transition-colors duration-300 ${textColor} hover:text-gray-600`}
+                >
+                  Login
+                </Link>
+
+                <NavIcons />
+              </div>
+            </div>
+
+            {/* Brand Name */}
+            <div className="py-4 text-center">
+              <Link href="/" className="inline-block">
+                <h1
+                  className={`font-bold tracking-wider transition-colors duration-300 ${brandSize} ${textColor}`}
+                >
+                  DOLCE & GABBANA
+                </h1>
+              </Link>
+            </div>
+
+            {/* Main Navigation */}
+            <nav>
+              <div className="container mx-auto px-4">
+                <ul className="flex justify-center space-x-6 py-3">
+                  {mainNavLinks.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className={`${linkTextSize} font-medium transition-colors duration-300 ${textColor} hover:text-gray-600`}
+                      >
+                        {link.label}
+                        <span className="block h-[2px] w-0 bg-black transition-all duration-300 hover:w-full"></span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </nav>
           </div>
         </div>
-        <div className="w-2/3 xl:w-1/2 flex items-center justify-between gap-8">
-          <SearchBar />
-          <NavIcons />
-        </div>
       </div>
-    </div>
+    </>
   );
 };
 
