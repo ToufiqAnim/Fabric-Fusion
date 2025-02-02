@@ -19,7 +19,7 @@ const ListPage = async ({ searchParams }: { searchParams: any }) => {
             Grab up to 50% off on
             <br /> Selected Products
           </h1>
-          <button className="rounded-md bg-red-500  text-white px-5 py-3 text-sm w-max">
+          <button className=" bg-red-500  text-white px-5 py-3 text-sm w-max">
             Buy Now
           </button>
         </div>

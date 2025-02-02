@@ -17,9 +17,9 @@ const utilityLinks = [
 ];
 
 const mainNavLinks = [
-  { label: "VALENTINE'S DAY", href: "/valentines-day" },
+  { label: "All products", href: "/list?cat=all-products" },
   { label: "HIGHLIGHTS", href: "/highlights" },
-  { label: "WOMEN", href: "/women" },
+  { label: "WOMEN", href: "/list?cat=women" },
   { label: "MEN", href: "/list?cat=men" },
   { label: "CHILDREN", href: "/children" },
   { label: "BAGS", href: "/bags" },
@@ -116,14 +116,7 @@ const Navbar = () => {
                   />
                 </button>
 
-                <Link
-                  href="/login"
-                  className={`${linkTextSize} transition-colors duration-300 ${textColor} hover:text-gray-600`}
-                >
-                  Login
-                </Link>
-
-                <NavIcons />
+                <NavIcons isHovered={isHovered} isScrolled={isScrolled} />
               </div>
             </div>
 
@@ -131,7 +124,9 @@ const Navbar = () => {
             <div className="py-4 text-center">
               <Link href="/" className="inline-block">
                 <h1
-                  className={`font-bold tracking-wider transition-colors duration-300 ${brandSize} ${textColor}`}
+                  className={`font-bold tracking-wider transition-all duration-500 ease-in-out transform ${
+                    isScrolled ? "text-2xl scale-90" : "text-7xl scale-100"
+                  } ${textColor}`}
                 >
                   DOLCE & GABBANA
                 </h1>

@@ -13,7 +13,7 @@ const ProductImages = ({ items }: { items: any }) => {
           src={items[index].image?.url}
           alt={`Product image ${index + 1}`}
           fill
-          className="rounded-md object-cover"
+          className=" object-cover"
           sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
@@ -25,7 +25,7 @@ const ProductImages = ({ items }: { items: any }) => {
               i === index ? "ring-2 ring-blue-500" : ""
             }`} */
             className={`w-1/4 h-32 relative gap-4 mt-8 cursor-pointer ${
-              i === index ? "ring-1 ring-blue-500 rounded-md" : ""
+              i === index ? "ring-1 ring-blue-500 " : ""
             }`}
             onClick={() => setIndex(i)}
           >
@@ -34,7 +34,7 @@ const ProductImages = ({ items }: { items: any }) => {
               alt={`Thumbnail ${i + 1}`}
               fill
               sizes="(max-width: 768px) 25vw, 20vw"
-              className="rounded-md object-cover"
+              className=" object-cover"
             />
           </div>
         ))}

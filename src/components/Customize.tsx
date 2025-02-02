@@ -95,7 +95,7 @@ const CustomizeProducts = ({
                   role="button"
                   aria-disabled={disabled}
                   tabIndex={disabled ? -1 : 0}
-                  className={`ring-1 rounded-md py-1 px-4 text-sm transition ${
+                  className={`ring-1  py-1 px-4 text-sm transition ${
                     disabled
                       ? "ring-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed"
                       : selected

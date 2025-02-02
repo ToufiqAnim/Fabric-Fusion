@@ -23,7 +23,7 @@ const Categories = async () => {
                 href={`/list?cat=${item.slug}`}
                 className="group w-72 flex-shrink-0 transition-transform duration-300 hover:-translate-y-2"
               >
-                <div className="relative aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden">
+                <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
                   <Image
                     src={item.media?.mainMedia?.image?.url || "/category.jpg"}
                     alt=""

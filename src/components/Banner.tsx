@@ -38,8 +38,8 @@ const Banner = () => {
             <Image
               src={slide.image}
               alt={slide.title}
-              layout="fill"
-              objectFit="cover"
+              fill
+              style={{ objectFit: "cover" }}
               className="h-full w-full"
               priority
             />

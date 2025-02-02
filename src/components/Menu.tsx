@@ -22,7 +22,7 @@ const mainNavLinks = [
   { label: "BAGS", href: "/bags" },
 ];
 
-const MobileMenu = ({ isScrolled }) => {
+const MobileMenu = ({ isScrolled }: { isScrolled: boolean }) => {
   const [open, setOpen] = useState(false);
 
   return (
