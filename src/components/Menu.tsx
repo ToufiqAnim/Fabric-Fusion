@@ -14,12 +14,12 @@ const utilityLinks = [
 ];
 
 const mainNavLinks = [
-  { label: "VALENTINE'S DAY", href: "/valentines-day" },
-  { label: "HIGHLIGHTS", href: "/highlights" },
-  { label: "WOMEN", href: "/women" },
+  { label: "All Products", href: "/list?cat=all-products" },
+  { label: "HIGHLIGHTS", href: "/" },
+  { label: "WOMEN", href: "/list?cat=womenmen" },
   { label: "MEN", href: "/list?cat=men" },
-  { label: "CHILDREN", href: "/children" },
-  { label: "BAGS", href: "/bags" },
+  { label: "CHILDREN", href: "/list?cat=children" },
+  { label: "BAGS", href: "/" },
 ];
 
 const MobileMenu = ({ isScrolled }: { isScrolled: boolean }) => {
