@@ -18,11 +18,10 @@ const utilityLinks = [
 
 const mainNavLinks = [
   { label: "All products", href: "/list?cat=all-products" },
-  { label: "HIGHLIGHTS", href: "/highlights" },
+  { label: "HIGHLIGHTS", href: "/" },
   { label: "WOMEN", href: "/list?cat=women" },
   { label: "MEN", href: "/list?cat=men" },
-  { label: "CHILDREN", href: "/children" },
-  { label: "BAGS", href: "/bags" },
+  { label: "CHILDREN", href: "/list?cat=children" },
 ];
 
 const Navbar = () => {
